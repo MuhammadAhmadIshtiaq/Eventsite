@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: nascon
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 10s
+      evaluation_interval: 10s
+
+    scrape_configs:
+      # Scrape Prometheus itself
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+
+      # Scrape NASCON 3-Tier Backend API Metrics
+      - job_name: 'nascon-backend-api'
+        metrics_path: '/metrics'
+        static_configs:
+          - targets: ['nascon-backend-service.nascon.svc.cluster.local:5000']
+
+      # Scrape Jenkins CI/CD Pipeline Metrics
+      # (Works via host gateway or Jenkins container inside Docker/Minikube)
+      - job_name: 'jenkins-pipeline'
+        metrics_path: '/prometheus'
+        scrape_interval: 5s
+        static_configs:
+          - targets: ['host.minikube.internal:8085', 'jenkins-server:8080']

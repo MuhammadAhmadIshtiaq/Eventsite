@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NASCON '26 | University Tech Olympiad & Competitions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%3E<text y=%2226%22 font-size=%2224%22>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span>🚀 <strong>NASCON '26 Early Bird Registrations are Live!</strong> Compete with top university talent across the nation.</span>
+    <div class="system-status" id="systemStatus">
+      <span class="status-dot"></span>
+      <span id="statusText">Checking Backend...</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#home" class="brand">
+        <div class="brand-logo">⚡</div>
+        <div class="brand-text">
+          <span class="brand-title">NASCON<span>'26</span></span>
+          <span class="brand-sub">University Tech Fest</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#competitions" class="nav-link">Competitions</a>
+        <a href="#register-section" class="nav-link">Register</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#my-dashboard" class="nav-link auth-required" style="display:none;" id="navDashboard">My Registrations</a>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Guest View -->
+        <div id="guestActions" class="auth-buttons">
+          <button class="btn btn-outline" onclick="openAuthModal('login')">Sign In</button>
+          <button class="btn btn-primary" onclick="openAuthModal('signup')">Sign Up</button>
+        </div>
+
+        <!-- Logged In View -->
+        <div id="userActions" class="user-profile" style="display:none;">
+          <div class="user-info">
+            <span class="user-avatar" id="userInitial">S</span>
+            <span class="user-name" id="displayUserName">Student</span>
+          </div>
+          <button class="btn btn-sm btn-ghost" onclick="logoutUser()">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-bg-glow"></div>
+    <div class="hero-container">
+      <div class="hero-badge">
+        <span>🏆 FAST-NUCES Annual Technology Convention</span>
+      </div>
+      <h1 class="hero-title">
+        Unleash Your <span class="gradient-text">Tech Intellect</span> at NASCON 2026
+      </h1>
+      <p class="hero-desc">
+        Welcome to the national flagship technology olympiad. Battle in intense speed programming, 
+        24-hour hackathons, ethical hacking CTFs, AI innovation, and competitive e-sports.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#competitions" class="btn btn-primary btn-lg">Explore Competitions</a>
+        <a href="#register-section" class="btn btn-outline btn-lg">Register Team Now</a>
+      </div>
+
+      <!-- Quick Metrics Ticker -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value" id="statCompetitions">6</span>
+          <span class="metric-label">Competitions</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value" id="statPrize">PKR 435K</span>
+          <span class="metric-label">Prize Pool</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value" id="statRegistrations">120+</span>
+          <span class="metric-label">Teams Registered</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">3 Tiers</span>
+          <span class="metric-label">DevOps Architecture</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitions Section -->
+  <section class="section competitions-section" id="competitions">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">CHOOSE YOUR ARENA</span>
+        <h2 class="section-title">Flagship Competitions</h2>
+        <p class="section-subtitle">Pick your competition, assemble your university team, and compete for top prizes.</p>
+      </div>
+
+      <!-- Filter Categories -->
+      <div class="category-filters" id="categoryFilters">
+        <button class="filter-btn active" data-filter="all">All Arenas</button>
+        <button class="filter-btn" data-filter="Coding">Coding</button>
+        <button class="filter-btn" data-filter="Development">Hackathons</button>
+        <button class="filter-btn" data-filter="Cyber Security">Cyber Security</button>
+        <button class="filter-btn" data-filter="Robotics">Robotics</button>
+        <button class="filter-btn" data-filter="Artificial Intelligence">AI & Data</button>
+        <button class="filter-btn" data-filter="Gaming">E-Sports</button>
+      </div>
+
+      <!-- Competitions Cards Grid -->
+      <div class="competitions-grid" id="competitionsGrid">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading NASCON Competitions...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Registration Section -->
+  <section class="section registration-section" id="register-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">SUBMIT YOUR ENTRY</span>
+        <h2 class="section-title">Team Registration</h2>
+        <p class="section-subtitle">Register your squad for any NASCON competition in under 2 minutes.</p>
+      </div>
+
+      <div class="registration-card">
+        <form id="teamRegistrationForm" onsubmit="handleRegistrationSubmit(event)">
+          <div class="form-grid">
+            
+            <!-- Competition Selection -->
+            <div class="form-group full-width">
+              <label for="regEvent">Select Competition <span class="required">*</span></label>
+              <select id="regEvent" name="event_id" required>
+                <option value="">-- Choose Competition --</option>
+              </select>
+            </div>
+
+            <!-- Team Name -->
+            <div class="form-group">
+              <label for="regTeamName">Team Name <span class="required">*</span></label>
+              <input type="text" id="regTeamName" name="team_name" placeholder="e.g. Binary Bandits" required>
+            </div>
+
+            <!-- Team Leader Name -->
+            <div class="form-group">
+              <label for="regLeaderName">Team Leader Full Name <span class="required">*</span></label>
+              <input type="text" id="regLeaderName" name="leader_name" placeholder="e.g. Hamza Ahmed" required>
+            </div>
+
+            <!-- Leader Email -->
+            <div class="form-group">
+              <label for="regLeaderEmail">Leader Email Address <span class="required">*</span></label>
+              <input type="email" id="regLeaderEmail" name="leader_email" placeholder="leader@university.edu.pk" required>
+            </div>
+
+            <!-- Leader Phone -->
+            <div class="form-group">
+              <label for="regLeaderPhone">Contact WhatsApp / Phone <span class="required">*</span></label>
+              <input type="tel" id="regLeaderPhone" name="leader_phone" placeholder="0300-1234567" required>
+            </div>
+
+            <!-- University / Institution -->
+            <div class="form-group full-width">
+              <label for="regUniversity">University / College / Institute <span class="required">*</span></label>
+              <input type="text" id="regUniversity" name="university" placeholder="e.g. FAST-NUCES, NUST, GIKI, UET" required>
+            </div>
+
+            <!-- Additional Team Members -->
+            <div class="form-group full-width">
+              <label for="regMembers">Additional Team Members (Names & Student IDs)</label>
+              <textarea id="regMembers" name="members" rows="3" placeholder="Member 2: Ali Khan (22F-3412)&#10;Member 3: Sara Bilal (23F-8921)"></textarea>
+              <span class="field-hint">Leave blank if participating as an individual.</span>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg" id="submitRegBtn">
+              Confirm & Submit Registration
+            </button>
+          </div>
+
+          <div id="regFeedback" class="form-feedback" style="display:none;"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- My Registrations Dashboard (Auth Protected) -->
+  <section class="section dashboard-section" id="my-dashboard" style="display:none;">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-tag">PARTICIPANT PORTAL</span>
+        <h2 class="section-title">My Registered Competitions</h2>
+        <p class="section-subtitle">Track your team registrations, competition venues, and schedules.</p>
+      </div>
+
+      <div id="myRegistrationsContainer" class="registrations-list">
+        <p class="text-muted">No registrations found yet. Pick a competition above to register your team!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about-section" id="about">
+    <div class="section-container">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="section-tag">ABOUT NASCON</span>
+          <h2>The Legacy of Innovation</h2>
+          <p>
+            NASCON (National Solutions Convention) is one of the most anticipated national collegiate student events, 
+            bringing together hundreds of the brightest engineering, computer science, and business minds under one roof.
+          </p>
+          <div class="feature-bullets">
+            <div class="bullet">
+              <span class="bullet-icon">⚡</span>
+              <div>
+                <strong>3-Tier Cloud-Native Architecture</strong>
+                <p>Designed with decoupled Presentation (Nginx), Logic (Node.js API), and Persistence (PostgreSQL).</p>
+              </div>
+            </div>
+            <div class="bullet">
+              <span class="bullet-icon">🐳</span>
+              <div>
+                <strong>CI/CD & Kubernetes Ready</strong>
+                <p>Automated Jenkins deployment pipelines running on Minikube with integrated Prometheus & Grafana monitoring.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-card">
+          <div class="about-card-inner">
+            <h3>Event Schedule</h3>
+            <ul class="schedule-list">
+              <li>
+                <span class="day-badge">Day 1</span>
+                <div>
+                  <strong>Opening Ceremony & Coding Marathon</strong>
+                  <p>Speed Programming, Hackathon Kickoff & Keynotes</p>
+                </div>
+              </li>
+              <li>
+                <span class="day-badge">Day 2</span>
+                <div>
+                  <strong>Cybersecurity & Robotics Battles</strong>
+                  <p>CTF Qualifiers, RoboRace Heats & AI Project Demos</p>
+                </div>
+              </li>
+              <li>
+                <span class="day-badge">Day 3</span>
+                <div>
+                  <strong>Grand Finals & Award Ceremony</strong>
+                  <p>E-Sports finals, Project Pitching, PKR 400K+ Prize Distribution</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo">⚡</div>
+        <div>
+          <h3>NASCON '26</h3>
+          <p>National Solutions Convention | University DevOps Lab Project</p>
+        </div>
+      </div>
+      <div class="footer-copy">
+        <p>&copy; 2026 NASCON. Developed for 3-Tier Web App & CI/CD Kubernetes Lab.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Sign In / Sign Up Modal -->
+  <div class="modal-overlay" id="authModal" onclick="closeAuthModalOnOutside(event)">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      
+      <div class="modal-tabs">
+        <button class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="tab-btn" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="loginEmail" placeholder="student@university.edu" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary full-width" id="loginBtn">Sign In</button>
+        <div id="loginFeedback" class="form-feedback" style="display:none;"></div>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" style="display:none;" onsubmit="handleSignupSubmit(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="Zainab Noor" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="signupEmail" placeholder="zainab@university.edu.pk" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+        <div class="form-group">
+          <label>University / Institute</label>
+          <input type="text" id="signupUniversity" placeholder="FAST-NUCES Islamabad" required>
+        </div>
+        <div class="form-group">
+          <label>Student ID / Roll No</label>
+          <input type="text" id="signupStudentID" placeholder="22F-0145">
+        </div>
+        <button type="submit" class="btn btn-primary full-width" id="signupBtn">Create Account</button>
+        <div id="signupFeedback" class="form-feedback" style="display:none;"></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

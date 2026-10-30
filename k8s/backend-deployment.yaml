@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nascon-backend-config
+  namespace: nascon
+data:
+  PORT: "5000"
+  DB_HOST: "nascon-postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "nascon_db"
+  DB_USER: "nascon_user"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nascon-backend
+  namespace: nascon
+  labels:
+    app: nascon-backend
+    tier: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nascon-backend
+  template:
+    metadata:
+      labels:
+        app: nascon-backend
+        tier: api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "5000"
+    spec:
+      containers:
+        - name: backend
+          image: nascon-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: nascon-backend-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nascon-db-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nascon-db-secret
+                  key: JWT_SECRET
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nascon-backend-service
+  namespace: nascon
+  labels:
+    app: nascon-backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http
+  selector:
+    app: nascon-backend
