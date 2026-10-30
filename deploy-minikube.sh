@@ -53,3 +53,4 @@ echo "🌐 NASCON Website: http://${MINIKUBE_IP}:30080"
 echo "📊 Grafana:        http://${MINIKUBE_IP}:30030 (admin/admin)"
 echo "📈 Prometheus:     http://${MINIKUBE_IP}:30090"
 echo "=========================================================="
+

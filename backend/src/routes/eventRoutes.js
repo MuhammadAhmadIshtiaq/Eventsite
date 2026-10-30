@@ -12,3 +12,4 @@ router.post('/registrations', authenticateToken, eventController.registerForEven
 router.get('/registrations/my', authenticateToken, eventController.getMyRegistrations);
 
 module.exports = router;
+

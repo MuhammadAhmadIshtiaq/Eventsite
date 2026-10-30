@@ -59,3 +59,4 @@ Write-Host "📈 Prometheus Server:               http://$($minikubeIP):30090" -
 Write-Host "==========================================================" -ForegroundColor Green
 Write-Host "Tip: On Windows Docker Desktop driver, run in a separate terminal:" -ForegroundColor Yellow
 Write-Host "     minikube service nascon-frontend-service -n nascon" -ForegroundColor Yellow
+

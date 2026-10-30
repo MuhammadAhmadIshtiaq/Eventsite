@@ -4,3 +4,4 @@ metadata:
   name: nascon
   labels:
     app.kubernetes.io/part-of: nascon-event-platform
+

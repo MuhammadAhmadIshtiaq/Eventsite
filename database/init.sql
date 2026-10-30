@@ -122,3 +122,4 @@ VALUES
     'gamepad-2'
 )
 ON CONFLICT DO NOTHING;
+

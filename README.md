@@ -183,3 +183,4 @@ kubectl apply -f k8s/monitoring/grafana-deployment.yaml
 - **Grafana Dashboard**: `http://<minikube-ip>:30030`
   - Default user: `admin` / Password: `admin`
   - Prometheus datasource is pre-configured automatically!
+

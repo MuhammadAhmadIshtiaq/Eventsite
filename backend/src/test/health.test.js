@@ -13,3 +13,4 @@ test('JWT secret is defined in environment or fallback', () => {
   assert.ok(JWT_SECRET, 'JWT_SECRET should be defined');
   assert.strictEqual(typeof JWT_SECRET, 'string');
 });
+
