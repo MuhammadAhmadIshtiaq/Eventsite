@@ -32,3 +32,4 @@ echo "📈 Prometheus Server:      http://${EC2_PUBLIC_IP}:30090"
 echo "🛠️ Jenkins Dashboard:      http://${EC2_PUBLIC_IP}:8085"
 echo "=========================================================="
 echo "Ensure your AWS EC2 Security Group allows inbound traffic on these ports!"
+
